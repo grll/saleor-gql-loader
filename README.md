@@ -114,7 +114,7 @@ for year in possible_year_values:
 That's all there is to it. I added a jupyter notebook as an example with more usage [here](https://github.com/grll/saleor-gql-loader/blob/master/saleor_gql_loader/example.ipynb) where you will find a full
 example that I used to populate my data.
 
-For more details, I recommend you to check out the code, I tried to document it as much
+For more details, I recommend you to check out the [code](https://github.com/grll/saleor-gql-loader/blob/master/saleor_gql_loader/data_loader.py), I tried to document it as much
 as possible (it's only one module with one class).
 
 once again for any new features additions comments, feel free to open an issue or

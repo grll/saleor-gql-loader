@@ -10,7 +10,7 @@ requires a lot of dev better redo the project as a django app inside saleor
 project for easier testing.
 
 """
-from utils import graphql_request, override_dict, handle_errors
+from .utils import graphql_request, override_dict, handle_errors
 
 
 class ETLDataLoader:

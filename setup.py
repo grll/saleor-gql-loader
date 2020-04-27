@@ -1,14 +1,14 @@
 from distutils.core import setup
 setup(
     name='saleor-gql-loader',
-    packages=['saleor-gql-loader'],
-    version='0.0.2',
+    packages=['saleor_gql_loader'],
+    version='0.0.3',
     license='MIT',
     description='A simple gql loader class to create some entities in Saleor',
     author='Guillaume Raille',
     author_email='guillaume.raille@gmail.com',
     url='https://github.com/grll/saleor-gql-loader',
-    download_url='https://github.com/grll/saleor-gql-loader/archive/0.0.2.tar.gz',
+    download_url='https://github.com/grll/saleor-gql-loader/archive/0.0.3.tar.gz',
     keywords=['graphql', 'saleor', 'loader'],
     install_requires=['requests'],
     classifiers=[
