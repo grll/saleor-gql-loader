@@ -8,12 +8,9 @@ setup(
     author='Guillaume Raille',
     author_email='guillaume.raille@gmail.com',
     url='https://github.com/grll/saleor-gql-loader',
-    download_url='https://github.com/grll/saleor-gql-loader/archive/v_0.0.1.tar.gz',
+    download_url='https://github.com/grll/saleor-gql-loader/archive/0.0.1.tar.gz',
     keywords=['graphql', 'saleor', 'loader'],
-    install_requires=[
-        'requests',
-        'beautifulsoup4',
-    ],
+    install_requires=['requests'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
