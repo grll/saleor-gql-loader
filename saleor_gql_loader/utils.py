@@ -7,6 +7,9 @@ easy reusability
 """
 import requests
 import json
+from pathlib import Path
+from requests_toolbelt import MultipartEncoder
+from django.core.serializers.json import DjangoJSONEncoder
 
 GQL_DEFAULT_ENDPOINT = "http://localhost:8000/graphql/"
 
@@ -46,6 +49,45 @@ def graphql_request(query, variables={}, headers={},
             'variables': variables
         }
     )
+
+    parsed_response = json.loads(response.text)
+    if response.status_code != 200:
+        raise Exception("{message}\n extensions: {extensions}".format(
+            **parsed_response["errors"][0]))
+    else:
+        return parsed_response
+
+
+def graphql_multipart_request(body, headers, endpoint=GQL_DEFAULT_ENDPOINT):
+    """Execute a multipart graphQL query with `body` provided on the `endpoint`.
+
+    Parameters
+    ----------
+    body : str
+        payloads of graphQL query.
+    headers : dict, optional
+        headers added to the request (important for authentication).
+    endpoint : str, optional
+        the graphQL endpoint url that will be queried, default is
+        `GQL_DEFAULT_ENDPOINT`.
+
+    Returns
+    -------
+    response : dict
+        a dictionary corresponding to the parsed JSON graphQL response.
+
+    Raises
+    ------
+    Exception
+        when `response.status_code` is not 200.
+    """
+    bodyEncoder = MultipartEncoder(body)
+    base_headers = {
+        "Content-Type": bodyEncoder.content_type,
+    }
+    override_dict(headers, base_headers)
+
+    response = requests.post(endpoint, data=bodyEncoder, headers=headers, timeout=90)
 
     parsed_response = json.loads(response.text)
     if response.status_code != 200:
@@ -99,3 +141,86 @@ def handle_errors(errors):
         txt_list = [
             "{field} : {message}".format(**error) for error in errors]
         raise Exception("\n".join(txt_list))
+
+def get_operations(product_id):
+    """Get ProductImageCreate operations
+
+    Parameters
+    ----------
+    product_id : str
+            id for which the product image will be created.
+
+    Returns
+    -------
+    query : str
+    variables: dict
+    """
+    query = """mutation ProductImageCreate($product: ID!, $image: Upload!, $alt: String) {
+                    productImageCreate(input: {alt: $alt, image: $image, product: $product}) {
+                    image{
+                        id
+                      }
+                    productErrors {
+                        field
+                        message
+                    }
+                    }
+                }"""
+    variables = {
+        "product": product_id,
+        "image": "0",
+        "alt": ''
+    }
+    return {"query": query, "variables": variables}
+
+def get_operations(product_id):
+    """Get ProductImageCreate operations
+
+    Parameters
+    ----------
+    product_id : str
+            id for which the product image will be created.
+
+    Returns
+    -------
+    query : str
+    variables: dict
+    """
+    query = """mutation ProductImageCreate($product: ID!, $image: Upload!, $alt: String) {
+                  productImageCreate(input: {alt: $alt, image: $image, product: $product}) {
+                      image{
+                        id
+                      }
+                      productErrors {
+                          field
+                          message
+                      }
+                    }
+                }"""
+    variables = {
+        "product": product_id,
+        "image": "0",
+        "alt": ''
+    }
+    return {"query": query, "variables": variables}
+
+def get_payload(product_id, file_path):
+    """Get ProductImageCreate operations
+
+    Parameters
+    ----------
+    product_id : str
+            id for which the product image will be created.
+
+    Returns
+    -------
+    query : str
+    variables: dict
+    """
+    return {
+        "operations": json.dumps(
+            get_operations(product_id), cls=DjangoJSONEncoder
+        ),
+        "map": json.dumps({'0': ["variables.image"]}, cls=DjangoJSONEncoder),
+        "0": (Path(file_path).name, open(file_path, 'rb'), 'image/png')
+    }

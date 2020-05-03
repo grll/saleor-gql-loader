@@ -10,7 +10,7 @@ requires a lot of dev better redo the project as a django app inside saleor
 project for easier testing.
 
 """
-from .utils import graphql_request, override_dict, handle_errors
+from .utils import graphql_request, graphql_multipart_request, override_dict, handle_errors, get_payload
 
 
 class ETLDataLoader:
@@ -517,3 +517,33 @@ class ETLDataLoader:
         handle_errors(errors)
 
         return response["data"]["productVariantCreate"]["productVariant"]["id"]
+
+    def create_product_image(self, product_id, file_path):
+        """create a product image.
+
+        Parameters
+        ----------
+        product_id : str
+            id for which the product image will be created.
+        file_path : str
+            path to the image to upload.
+
+        Returns
+        -------
+        id : str
+            the id of the product image created.
+
+        Raises
+        ------
+        Exception
+            when productErrors is not an empty list.
+        """
+        body = get_payload(product_id, file_path)
+
+        response = graphql_multipart_request(
+            body, self.headers, self.endpoint_url)
+
+        errors = response["data"]["productImageCreate"]["productErrors"]
+        handle_errors(errors)
+
+        return response["data"]["productImageCreate"]["image"]["id"]

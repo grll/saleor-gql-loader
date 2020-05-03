@@ -14,6 +14,7 @@ As of now, `saleor-gql-loader` allows to create the following entities:
 - [x] category
 - [x] product
 - [x] product_variant
+- [x] product_image
 
 PR for supporting more graphQL mutations and/or queries are more than welcome.
 
@@ -28,7 +29,7 @@ team/community._
 using Pypi:
 
 ```bash
-pip install saleor-gql-loader
+pip install saleor-gql-loader requests-toolbelt Django
 ```
 
 Or cloning the repo:
