@@ -14,6 +14,7 @@ As of now, `saleor-gql-loader` allows to create the following entities:
 - [x] category
 - [x] product
 - [x] product_variant
+- [x] product_image
 
 and update the following entities:
 
@@ -32,7 +33,7 @@ team/community._
 using Pypi:
 
 ```bash
-pip install saleor-gql-loader
+pip install saleor-gql-loader requests-toolbelt Django
 ```
 
 Or cloning the repo:
