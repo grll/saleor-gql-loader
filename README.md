@@ -15,6 +15,10 @@ As of now, `saleor-gql-loader` allows to create the following entities:
 - [x] product
 - [x] product_variant
 
+and update the following entities:
+
+- [x] shop
+
 PR for supporting more graphQL mutations and/or queries are more than welcome.
 
 In it's current state, the project is in very early alpha, might be unstable

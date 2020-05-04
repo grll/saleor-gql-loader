@@ -65,6 +65,166 @@ class ETLDataLoader:
         self.headers = {"Authorization": "Bearer {}".format(auth_token)}
         self.endpoint_url = endpoint_url
 
+    def update_shop_settings(self, **kwargs):
+        """update shop settings.
+
+        Parameters
+        ----------
+        **kwargs : dict, optional
+            overrides the default value set to update the shop settings refer to the
+            ShopSettingsInput graphQL type to know what can be overriden.
+
+        Raises
+        ------
+        Exception
+            when shopErrors is not an empty list
+        """
+
+        variables = {
+            "input": kwargs
+        }
+
+        query = """
+            mutation ShopSettingsUpdate($input: ShopSettingsInput!) {
+              shopSettingsUpdate(input: $input) {
+                shop {
+                    headerText
+                    description
+                    includeTaxesInPrices
+                    displayGrossPrices
+                    chargeTaxesOnShipping
+                    trackInventoryByDefault
+                    defaultWeightUnit
+                    automaticFulfillmentDigitalProducts
+                    defaultDigitalMaxDownloads
+                    defaultDigitalUrlValidDays
+                    defaultMailSenderName
+                    defaultMailSenderAddress
+                    customerSetPasswordUrl
+                }
+                shopErrors {
+                    field
+                    message
+                    code
+                }
+              }
+            }
+        """
+
+        response = graphql_request(
+            query, variables, self.headers, self.endpoint_url)
+
+        errors = response["data"]["shopSettingsUpdate"]["shopErrors"]
+        handle_errors(errors)
+
+        return response["data"]["shopSettingsUpdate"]["shop"]
+
+    def update_shop_domain(self, **kwargs):
+        """update shop domain.
+
+        Parameters
+        ----------
+        **kwargs : dict, optional
+            overrides the default value set to update the shop domain refer to the
+            SiteDomainInput graphQL type to know what can be overriden.
+
+        Raises
+        ------
+        Exception
+            when shopErrors is not an empty list
+        """
+
+        variables = {
+            "siteDomainInput": kwargs
+        }
+
+        query = """
+            mutation ShopDomainUpdate($siteDomainInput: SiteDomainInput!) {
+              shopDomainUpdate(input: $siteDomainInput) {
+                shop {
+                    domain {
+                        host
+                        sslEnabled
+                        url
+                    }
+                }
+                shopErrors {
+                    field
+                    message
+                    code
+                }
+              }
+            }
+        """
+
+        response = graphql_request(
+            query, variables, self.headers, self.endpoint_url)
+
+        errors = response["data"]["shopDomainUpdate"]["shopErrors"]
+        handle_errors(errors)
+
+        return response["data"]["shopSettingsUpdate"]["shop"]["domain"]
+
+    def update_shop_address(self, **kwargs):
+        """update shop address.
+
+        Parameters
+        ----------
+        **kwargs : dict, optional
+            overrides the default value set to update the shop address refer to the
+            AddressInput graphQL type to know what can be overriden.
+
+        Raises
+        ------
+        Exception
+            when shopErrors is not an empty list
+        """
+
+        variables = {
+            "addressInput": kwargs
+        }
+
+        query = """
+            mutation ShopAddressUpdate($addressInput: AddressInput!) {
+              shopAddressUpdate(input: $addressInput) {
+                shop {
+                    companyAddress {
+                        id
+                        firstName
+                        lastName
+                        companyName
+                        streetAddress1
+                        streetAddress2
+                        city
+                        cityArea
+                        postalCode
+                        country {
+                            code
+                            country
+                        }
+                        countryArea
+                        phone
+                        isDefaultShippingAddress
+                        isDefaultBillingAddress
+                    }
+                }
+                shopErrors {
+                    field
+                    message
+                    code
+                }
+              }
+            }
+        """
+
+        response = graphql_request(
+            query, variables, self.headers, self.endpoint_url)
+
+        errors = response["data"]["shopAddressUpdate"]["shopErrors"]
+        handle_errors(errors)
+
+        return response["data"]["shopAddressUpdate"]["shop"]["companyAddress"]
+
     def create_warehouse(self, **kwargs):
         """create a warehouse.
 
