@@ -81,17 +81,32 @@ class ETLDataLoader:
         """
 
         variables = {
-            "shopSettingsInput": kwargs
+            "input": kwargs
         }
 
         query = """
-            mutation ShopSettingsUpdate($shopSettingsInput: ShopSettingsInput!) {
-              shopSettingsUpdate(input: $shopSettingsInput) {
+            mutation ShopSettingsUpdate($input: ShopSettingsInput!) {
+              shopSettingsUpdate(input: $input) {
+                shop {
+                    headerText
+                    description
+                    includeTaxesInPrices
+                    displayGrossPrices
+                    chargeTaxesOnShipping
+                    trackInventoryByDefault
+                    defaultWeightUnit
+                    automaticFulfillmentDigitalProducts
+                    defaultDigitalMaxDownloads
+                    defaultDigitalUrlValidDays
+                    defaultMailSenderName
+                    defaultMailSenderAddress
+                    customerSetPasswordUrl
+                }
                 shopErrors {
-                        field
-                        message
-                        code
-                    }
+                    field
+                    message
+                    code
+                }
               }
             }
         """
@@ -101,6 +116,8 @@ class ETLDataLoader:
 
         errors = response["data"]["shopSettingsUpdate"]["shopErrors"]
         handle_errors(errors)
+
+        return response["data"]["shopSettingsUpdate"]["shop"]
 
     def update_shop_domain(self, **kwargs):
         """update shop domain.
@@ -124,11 +141,18 @@ class ETLDataLoader:
         query = """
             mutation ShopDomainUpdate($siteDomainInput: SiteDomainInput!) {
               shopDomainUpdate(input: $siteDomainInput) {
-                shopErrors {
-                        field
-                        message
-                        code
+                shop {
+                    domain {
+                        host
+                        sslEnabled
+                        url
                     }
+                }
+                shopErrors {
+                    field
+                    message
+                    code
+                }
               }
             }
         """
@@ -138,6 +162,8 @@ class ETLDataLoader:
 
         errors = response["data"]["shopDomainUpdate"]["shopErrors"]
         handle_errors(errors)
+
+        return response["data"]["shopSettingsUpdate"]["shop"]["domain"]
 
     def update_shop_address(self, **kwargs):
         """update shop address.
@@ -161,11 +187,32 @@ class ETLDataLoader:
         query = """
             mutation ShopAddressUpdate($addressInput: AddressInput!) {
               shopAddressUpdate(input: $addressInput) {
-                shopErrors {
-                        field
-                        message
-                        code
+                shop {
+                    companyAddress {
+                        id
+                        firstName
+                        lastName
+                        companyName
+                        streetAddress1
+                        streetAddress2
+                        city
+                        cityArea
+                        postalCode
+                        country {
+                            code
+                            country
+                        }
+                        countryArea
+                        phone
+                        isDefaultShippingAddress
+                        isDefaultBillingAddress
                     }
+                }
+                shopErrors {
+                    field
+                    message
+                    code
+                }
               }
             }
         """
@@ -175,6 +222,8 @@ class ETLDataLoader:
 
         errors = response["data"]["shopAddressUpdate"]["shopErrors"]
         handle_errors(errors)
+
+        return response["data"]["shopAddressUpdate"]["shop"]["companyAddress"]
 
     def create_warehouse(self, **kwargs):
         """create a warehouse.
