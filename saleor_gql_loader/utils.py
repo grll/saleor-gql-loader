@@ -85,7 +85,7 @@ def graphql_multipart_request(body, headers, endpoint=GQL_DEFAULT_ENDPOINT):
     base_headers = {
         "Content-Type": bodyEncoder.content_type,
     }
-    override_dict(headers, base_headers)
+    override_dict(base_headers, headers)
 
     response = requests.post(endpoint, data=bodyEncoder, headers=headers, timeout=90)
 
@@ -155,48 +155,19 @@ def get_operations(product_id):
     query : str
     variables: dict
     """
-    query = """mutation ProductImageCreate($product: ID!, $image: Upload!, $alt: String) {
-                    productImageCreate(input: {alt: $alt, image: $image, product: $product}) {
-                    image{
-                        id
-                      }
-                    productErrors {
-                        field
-                        message
-                    }
-                    }
-                }"""
-    variables = {
-        "product": product_id,
-        "image": "0",
-        "alt": ''
-    }
-    return {"query": query, "variables": variables}
-
-def get_operations(product_id):
-    """Get ProductImageCreate operations
-
-    Parameters
-    ----------
-    product_id : str
-            id for which the product image will be created.
-
-    Returns
-    -------
-    query : str
-    variables: dict
+    query = """
+        mutation ProductImageCreate($product: ID!, $image: Upload!, $alt: String) {
+            productImageCreate(input: {alt: $alt, image: $image, product: $product}) {
+                image{
+                    id
+                }
+                productErrors {
+                    field
+                    message
+                }
+            }
+        }
     """
-    query = """mutation ProductImageCreate($product: ID!, $image: Upload!, $alt: String) {
-                  productImageCreate(input: {alt: $alt, image: $image, product: $product}) {
-                      image{
-                        id
-                      }
-                      productErrors {
-                          field
-                          message
-                      }
-                    }
-                }"""
     variables = {
         "product": product_id,
         "image": "0",
