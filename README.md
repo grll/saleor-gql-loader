@@ -33,7 +33,7 @@ team/community._
 using Pypi:
 
 ```bash
-pip install saleor-gql-loader requests-toolbelt Django
+pip install saleor-gql-loader
 ```
 
 Or cloning the repo:
