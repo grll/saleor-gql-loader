@@ -47,7 +47,7 @@ git clone https://github.com/grll/saleor-gql-loader.git
 ### prerequisities
 
 The first requirement is to have a running saleor installation with the latest
-version installed (2.9).
+version installed (2.10).
 
 Before being able to use the package to create entities you need to create a
 saleor app with the necessary permissions to create the entities you need.
@@ -57,7 +57,6 @@ One way of doing that is to use the specific django cli custom command `create_a
 ```bash
 python manage.py create_app etl --permission account.manage_users \
                                 --permission account.manage_staff \
-                                --permission app.manage_apps \
                                 --permission app.manage_apps \
                                 --permission discount.manage_discounts \
                                 --permission plugins.manage_plugins \
