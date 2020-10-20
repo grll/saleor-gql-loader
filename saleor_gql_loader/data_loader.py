@@ -707,3 +707,89 @@ class ETLDataLoader:
         handle_errors(errors)
 
         return response["data"]["productImageCreate"]["image"]["id"]
+
+    def create_customer_account(self, **kwargs):
+        """
+        Creates a customer (as an admin)
+        Parameters
+        ----------
+        kwargs: customer
+
+        Returns
+        -------
+
+        """
+        default_kwargs = {
+            "firstName": "default",
+            "lastName": "default",
+            "email": "default@default.com",
+            "isActive": False,
+        }
+
+        override_dict(default_kwargs, kwargs)
+
+        variables = {"input": default_kwargs}
+
+        query = """
+            mutation customerCreate($input: UserCreateInput !) {
+                customerCreate(input: $input) {
+                    user {
+                        id
+                    }
+                    accountErrors {
+                        field
+                        message
+                        code
+                    }
+                }
+            }
+        """
+
+        response = graphql_request(query, variables, self.headers, self.endpoint_url)
+
+        errors = response["data"]["customerCreate"]["accountErrors"]
+        handle_errors(errors)
+
+        return response["data"]["customerCreate"]["user"]["id"]
+
+    def update_private_meta(self, item_id, input_list):
+        """
+
+        Parameters
+        ----------
+        item_id: ID of the item to update. Model need to work with private metadata
+        input_list: an input dict to which to set the private meta
+        Returns
+        -------
+
+        """
+
+        variables = {"id": item_id, "input": input_list}
+
+        query = """
+                    mutation updatePrivateMetadata($id: ID!, $input: [MetadataInput!]!) {
+                        updatePrivateMetadata(id: $id, input: $input) {
+                            item {
+                                privateMetadata {
+                                    key
+                                    value
+                                }
+                            }
+                            metadataErrors {
+                                field
+                                message
+                                code
+                            }
+                        }
+                    }
+                """
+
+        response = graphql_request(query, variables, self.headers, self.endpoint_url)
+
+        if (
+            len(response["data"]["updatePrivateMetadata"]["item"]["privateMetadata"])
+            > 0
+        ):
+            return item_id
+        else:
+            return None
