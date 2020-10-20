@@ -87,7 +87,7 @@ def graphql_multipart_request(body, headers, endpoint=GQL_DEFAULT_ENDPOINT):
     }
     override_dict(base_headers, headers)
 
-    response = requests.post(endpoint, data=bodyEncoder, headers=headers, timeout=90)
+    response = requests.post(endpoint, data=bodyEncoder, headers=base_headers, timeout=90)
 
     parsed_response = json.loads(response.text)
     if response.status_code != 200:
