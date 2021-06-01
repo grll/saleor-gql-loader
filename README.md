@@ -87,7 +87,7 @@ that you want to create there is a corresponding method on the class.
 from saleor_gql_loader import ETLDataLoader
 
 # initialize the data_loader (optionally provide an endpoint url as second parameter)
-data_loader = ETLDataLoader("LcLNVgUt8mu8yKJ0Wrh3nADnTT21uv")
+etl_data_loader = ETLDataLoader("LcLNVgUt8mu8yKJ0Wrh3nADnTT21uv")
 
 # create a warehouse
 warehouse_id = etl_data_loader.create_warehouse()
